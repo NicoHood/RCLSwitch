@@ -21,53 +21,52 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-/*
-This is a minimal sketch without using the library at all but only works for
-the 10 pole dip switch sockets. It saves a lot of memory and thus might be
-very useful to use with ATTinys :)
-
-Original library:
-http://code.google.com/p/rc-switch/
-*/
-
 #ifndef RCLSwitch_h
 #define RCLSwitch_h
 
 #include "Arduino.h"
 
-class RCLSwitch {
+class RCLSwitch{
 public:
 	inline RCLSwitch(uint8_t RCLpin){
-		_RCLpin=RCLpin;
+		_RCLpin = RCLpin;
 		pinMode(_RCLpin, OUTPUT);
-	};
+	}
 
-	void changeInput(uint16_t &code);
-	void sendInput(uint16_t code);
+	inline void write(uint8_t channel, uint8_t button, bool state){
+		uint16_t code = (channel << 7) | ((button&0x1F) << 2) | (state<<1) | (!state);
+		write(code);
+	}
 
-	//just a test
-	inline void write(uint16_t letter, uint8_t &state){
-		state^=1;
-		uint16_t code =  (letter<<2) | (1 << state) ;
+	inline void write(uint16_t code){
+		for (int nRepeat = 0; nRepeat < 5; nRepeat++) {
+			// check every input bit
+			for (int i = 0; i <12; i++) { 
 
-		for (int nRepeat=0; nRepeat<6; nRepeat++) {
-			for (int i=11; i>=0; i--) { //check every input bit
-				transmit(1,3); //always send this before Tristate (part of Tri-State actually)
-				if ((code>>i) &0x01==1) {
-					transmit(1,3); //send Tri-State'0'
-				} 
-				else {
-					transmit(3,1); //send Tri-State'F'
-				}
+				// always send this before Tristate (part of Tri-State actually)
+				transmit(1, 3); // send Tri-State'0'
+
+				if (code >> (11-i) & 0x01 == 1)
+					// send Tri-State'0'
+					transmit(1, 3); 
+				else
+					// send Tri-State'F'
+					transmit(3, 1);
 			}
-			transmit(1,31); //sendSync
+			// sendSync
+			transmit(1, 31); 
 		}
-	};
+	}
 
 private:
 	uint8_t _RCLpin;
 
-	void transmit(uint8_t nHighPulses, uint8_t nLowPulses);
+	inline void transmit(uint8_t nHighPulses, uint8_t nLowPulses){
+		digitalWrite(_RCLpin, HIGH);
+		delayMicroseconds(350 * nHighPulses);
+		digitalWrite(_RCLpin, LOW);
+		delayMicroseconds(350 * nLowPulses);
+	}
 };
 
 #endif

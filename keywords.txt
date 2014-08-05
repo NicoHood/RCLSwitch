@@ -12,8 +12,7 @@ RCLSwitch	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
-changeInput	KEYWORD2
-sendInput	KEYWORD2
+write	KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
