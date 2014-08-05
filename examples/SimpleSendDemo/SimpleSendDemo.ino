@@ -10,8 +10,8 @@
 const uint8_t RCLpin = 7;
 RCLSwitch myRCLSwitch(RCLpin);
 
-uint8_t channel = B00001;
-uint8_t button = B10000;
+const uint8_t channel = B00001;
+const uint8_t button = B10000;
 bool state = false;
 
 void setup() {
