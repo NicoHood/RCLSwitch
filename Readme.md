@@ -5,7 +5,6 @@ Compact version of RC Switch for sending TYPE A 10 Dip Switch signals only.
 It saves a lot of memory.
 
 Original, full Library with receiving and other unit types (A, B, C):
-* http://code.google.com/p/rc-switch/
 * https://github.com/sui77/rc-switch
 
 Version History
