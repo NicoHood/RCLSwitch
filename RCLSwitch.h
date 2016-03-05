@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014 NicoHood
+Copyright (c) 2014-2016 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,63 +21,83 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-#ifndef RCLSwitch_h
-#define RCLSwitch_h
+// Include guard
+#pragma once
+
+// Software version
+#define RCLSWITCH_VERSION 140
 
 #include "Arduino.h"
 
-class RCLSwitch{
+// Definitions for the tiny DIP switch to set channel and button trigger
+#define RCL_DIP(a, b, c, d, e) (((a) & 0x01 << 4) | ((b) & 0x01 << 3) \
+| ((c) & 0x01 << 2) | ((d) & 0x01 << 1) | ((e) & 0x01 << 0))
+
+#define RCL_CHANNEL_1 (1 << 4)
+#define RCL_CHANNEL_2 (1 << 3)
+#define RCL_CHANNEL_3 (1 << 2)
+#define RCL_CHANNEL_4 (1 << 1)
+#define RCL_CHANNEL_5 (1 << 0)
+
+#define RCL_BUTTON_A (1 << 4)
+#define RCL_BUTTON_B (1 << 3)
+#define RCL_BUTTON_C (1 << 2)
+#define RCL_BUTTON_D (1 << 1)
+#define RCL_BUTTON_E (1 << 0)
+
+
+template <uint8_t pin>
+class CRCLSwitch{
 public:
-	inline RCLSwitch(uint8_t RCLpin){
-		_RCLpin = RCLpin;
-		pinMode(_RCLpin, OUTPUT);
+	inline CRCLSwitch(void){
+		// Empty
 	}
 
-	inline void write(uint8_t channel, uint8_t button, bool state){
-		uint16_t code = (channel << 7) | ((button&0x1F) << 2) | (state<<1) | (!state);
+	inline void begin(void){
+		// Prepare pin for sending
+		pinMode(pin, OUTPUT);
+	}
+
+	inline void end(void){
+		// End transmitting mode
+		pinMode(pin, INPUT);
+	}
+
+	inline void write(const uint8_t channel, const uint8_t button, const bool state){
+		// Transforms simple input into the other function overload
+		uint16_t code = (channel << 7) | ((button & 0x1F) << 2) | (state + 1);
 		write(code);
 	}
 
-	inline void write(uint16_t code){
-		for (int nRepeat = 0; nRepeat < 5; nRepeat++) {
-			// check every input bit
-			for (int i = 0; i <12; i++) { 
+	inline void write(const uint16_t code){
+		// Repeat sending
+		for (uint8_t nRepeat = 0; nRepeat < 5; nRepeat++) {
 
-				// always send this before Tristate (part of Tri-State actually)
-				transmit(1, 3); // send Tri-State'0'
+			// Check every input bit
+			for (uint8_t i = 0; i < 12; i++) {
 
-				if (code >> (11-i) & 0x01 == 1)
-					// send Tri-State'0'
-					transmit(1, 3); 
+				// Always send Tri-State'0' first
+				transmit(1, 3);
+
+				// Send Tri-State'0'
+				if ((code >> (11 - i) & 0x01) == 1)
+					transmit(1, 3);
+
+				// Send Tri-State'F'
 				else
-					// send Tri-State'F'
 					transmit(3, 1);
 			}
-			// sendSync
-			transmit(1, 31); 
+			// Send Sync
+			transmit(1, 31);
 		}
 	}
 
 private:
-	uint8_t _RCLpin;
-
-	inline void transmit(uint8_t nHighPulses, uint8_t nLowPulses){
-		digitalWrite(_RCLpin, HIGH);
+	inline void transmit(const uint8_t nHighPulses, const uint8_t nLowPulses){
+		// Transmits data
+		digitalWrite(pin, HIGH);
 		delayMicroseconds(350 * nHighPulses);
-		digitalWrite(_RCLpin, LOW);
+		digitalWrite(pin, LOW);
 		delayMicroseconds(350 * nLowPulses);
 	}
 };
-
-#endif
-
-
-
-
-
-
-
-
-
-
-
