@@ -1,15 +1,21 @@
-RCLSwitch
-=========
+RCLSwitch 1.4
+=============
 
-Compact version of RC Switch for sending TYPE A 10 Dip Switch only.
+Compact version of RC Switch for sending TYPE A 10 Dip Switch signals only.
 It saves a lot of memory.
 
-Original, full Library with receiving and other types.
-http://code.google.com/p/rc-switch/
+Original, full Library with receiving and other unit types (A, B, C):
+* https://github.com/sui77/rc-switch
 
 Version History
 ===============
 ```
+1.4 (05.03.2016)
+* Added Template
+* Made code more compact
+* Added version identifier
+* Added library.properties
+
 1.3 (05.08.2014)
 * Changed syntax
 * Cleaned Code
@@ -20,11 +26,11 @@ Version History
 * Release and minor fixes
 ```
 
-Licence and Copyright
+License and Copyright
 =====================
 
 ```
-Copyright (c) 2014 NicoHood
+Copyright (c) 2014-2016 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
