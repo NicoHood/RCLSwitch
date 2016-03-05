@@ -10,7 +10,7 @@ Original, full Library with receiving and other unit types (A, B, C):
 Version History
 ===============
 ```
-1.4 (xx.xx.2016)
+1.4 (05.03.2016)
 * Added Template
 * Made code more compact
 * Added version identifier
