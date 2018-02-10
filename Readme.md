@@ -1,5 +1,5 @@
-RCLSwitch 1.4
-=============
+RCLSwitch 1.4.1
+===============
 
 Compact version of RC Switch for sending TYPE A 10 Dip Switch signals only.
 It saves a lot of memory.
@@ -10,6 +10,10 @@ Original, full Library with receiving and other unit types (A, B, C):
 Version History
 ===============
 ```
+1.4.1 (10.02.2018)
+* Added makefile compilation option without Arduino core
+* Turn digital pin off when using end()
+
 1.4 (05.03.2016)
 * Added Template
 * Made code more compact
@@ -30,7 +34,7 @@ License and Copyright
 =====================
 
 ```
-Copyright (c) 2014-2016 NicoHood
+Copyright (c) 2014-2018 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy

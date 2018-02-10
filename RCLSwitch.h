@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2014-2016 NicoHood
+Copyright (c) 2014-2018 NicoHood
 See the readme for credit to other people.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,9 +25,11 @@ THE SOFTWARE.
 #pragma once
 
 // Software version
-#define RCLSWITCH_VERSION 140
+#define RCLSWITCH_VERSION 141
 
+#ifdef ARDUINO
 #include "Arduino.h"
+#endif
 
 // Definitions for the tiny DIP switch to set channel and button trigger
 #define RCL_DIP(a, b, c, d, e) (((a) & 0x01 << 4) | ((b) & 0x01 << 3) \
@@ -61,6 +63,7 @@ public:
 	inline void end(void){
 		// End transmitting mode
 		pinMode(pin, INPUT);
+		digitalWrite(pin, LOW);
 	}
 
 	inline void write(const uint8_t channel, const uint8_t button, const bool state){
